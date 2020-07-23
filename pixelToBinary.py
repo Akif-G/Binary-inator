@@ -2,11 +2,12 @@
 from PIL import Image
 import numpy
 import cv2
+import sys
 
 
-def pixelToBinary:
+def pixelToBinary(text):
     # Open Paddington
-    img = Image.open("paddington.png")
+    img = Image.open(text)
 
     # Resize smoothly down to 40x40 pixels
     imgSmall = img.resize((40, 40), resample=Image.BILINEAR)
@@ -30,3 +31,6 @@ def pixelToBinary:
             if k == 255:
                 k = 1
             print(k)
+
+
+pixelToBinary(sys.argv[1])
