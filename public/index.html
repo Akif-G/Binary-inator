@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="index.css">
+</head>
+
+<body>
+    <div class=Container>
+        <div class="SubmitGroup">
+            <div class="Form">
+                <form action="/uploadfile" enctype="multipart/form-data" method="POST" class="submitForm">
+                    <div class="element" id="imageChoose">
+                        <label for="file-upload" class="custom-file-upload">
+                            Upload A File
+                        </label>
+                        <input id="file-upload" type="file" name="myFile" />
+                    </div>
+                    <br>
+                    <div class="element">
+                        <div class="InnerElement">
+                            <p>output width:</p>
+                            <input type="text" name="width" placeholder="40"></input>
+                        </div>
+                        <div class="InnerElement">
+                            <p>output height:</p>
+                            <input type="text" name="height" placeholder="40"></input>
+                        </div>
+                        <div class="InnerElement">
+                            <p>b/w tolarance:</p>
+                            <input type="text" name="tolarance" placeholder="0-126"></input>
+                        </div>
+                        <div class="InnerElement">
+                            <input type="checkbox" name="inpage" checked>inpage</input>
+                        </div>
+                    </div>
+                    <br>
+                </form>
+            </div>
+            <div class="element " id="Convert">
+                <input id="ConvertButton" type="submit" value="Convert!" />
+            </div>
+        </div>
+        <div class="Result">
+            <div class="Draw">Output</div>
+        </div>
+    </div>
+
+</body>
+
+</html>
