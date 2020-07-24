@@ -19,7 +19,7 @@ app.use(morgan('dev'));
 
 //limit requests
 const limiter = rateLimit({
-    max: 100,
+    max: 10000,
     windowMs: 60 * 60 * 1000,
     message: 'too many request for this ip please try again later.'
 })
@@ -38,20 +38,102 @@ const storage = multer.diskStorage({
     }
 });
 
+//FUNCTIONS
 const upload = multer({ storage: storage });
 
+sendToConvert = (req, res, next) => {
+    const file = req.file;
+    if (!file) {
+        return res.status(400)
+            .json({
+                success: false,
+                data: 'Please specify a file',
+            })
+    }
+    var redirectAddress = '/convert?filename=' + req.file.filename;
+    if (req.body.width) redirectAddress += '&width=' + req.body.width;
+    if (req.body.height) redirectAddress += '&height=' + req.body.height;
+    if (req.body.tolarance) redirectAddress += '&tolarance=' + req.body.tolarance;
+    redirectAddress += '&inpage=' + (req.body.inpage === 'on');
+
+    res.redirect(redirectAddress);
+};
+
+check = (req, res, next) => {
+    console.log(req.query)
+    const queries = {
+        filename: req.query.filename ? req.query.filename : null,
+        width: req.query.width ? req.query.width : null,
+        height: req.query.height ? req.query.height : null,
+        tolarance: req.query.tolarance ? req.query.tolarance : null,
+        inpage: req.query.inpage === 'true' ? true : false,
+    };
+    //check if there is file...
+    if (!queries.filename) {
+        return res.status(400)
+            .json({
+                success: false,
+                data: 'Please specify a file',
+            })
+    }
+
+    //check if there are queries, import to defaults if not.
+    if (!queries.width) queries.width = 40;
+    if (!queries.height) queries.height = 40;
+    if (!queries.tolarance) queries.tolarance = 57;
+    if (!queries.inpage) queries.inpage = false;
+
+    //limitations
+
+    if (queries.height > 255 || queries.width < 1) {
+        return res.status(400)
+            .json({
+                success: false,
+                data: 'height is invalid (min:0 max:255)',
+            })
+    };
+
+    if (queries.width > 255 || queries.width < 1) {
+        return res.status(400)
+            .json({
+                success: false,
+                data: 'width is invalid (min:0 max:255)',
+            })
+    };
+
+    if (queries.tolarance > 126) {
+        return res.status(400)
+            .json({
+                success: false,
+                data: 'tolarance is invalid (min:0 max:126)',
+            })
+    };
+
+    //ok
+    req.query = queries;
+    next()
+}
+
 const convert = (req, res, next) => {
-    var dataToSend;
+    var dataToSend = "";
     // spawn new child process to call the python script
     var filename = 'imgs/paddington.png';
-    if (req.params.filename) {
-        filename = 'imgs/' + req.params.filename;
+    if (req.query.filename) {
+        filename = 'imgs/' + req.query.filename;
     }
-    const python = spawn('python', ['pixelToBinary.py', filename]);
+    const python = spawn('python', ['pixelToBinary.py', filename, req.query.width, req.query.height, req.query.tolarance]);
     // collect data from script
     python.stdout.on('data', function (data) {
         console.log('Pipe data from python script ...');
-        dataToSend = data.toString();
+        let stringified;
+        try {
+            stringified = data.toString();
+        }
+        catch (err) {
+            console.log(err)
+            stringified = "";
+        };
+        dataToSend += stringified;
     });
     // in close event we are sure that stream from child process is closed
     python.on('close', (code) => {
@@ -62,25 +144,24 @@ const convert = (req, res, next) => {
     });
 }
 const show = (req, res, next) => {
-    // var page = req.dataToSend.split('').map(el => { if (el !== " ") return '<p style="width:2.5%; margin:0px; height:auto; font-size:10px">' + el + '</p>' }).join('')
-    req.dataToSend;
-    var page = "<div style='width:485px'>" + req.dataToSend + "</div>"
-    res.send(page)
+    console.log(req.query.inpage)
+    if (req.query.inpage === true) {
+        var page = "<div style=\"width:" + req.query.width * 12.05 + "px; font:16px \'Times New Roman\'\">" + req.dataToSend + "</div>"
+        res.send(page)
+    }
+    else {
+        let data = req.dataToSend.split('\n').join('')
+        res.send(`{"data":"${data}"}`)
+    }
 }
 
-app.post('/uploadfile', upload.single('myFile'), (req, res, next) => {
-    const file = req.file;
-    if (!file) {
-        const error = new Error('Please upload a file')
-        error.httpStatusCode = 400
-        return next(error)
-    }
-    res.redirect('/convert/' + req.file.filename);
-})
+// API
+app.post('/uploadfile', (res, req, next) => { console.log(req.body); next() }, upload.single('file'), sendToConvert);
 
-app.get('/convert/:filename', convert, show);
+app.get('/convert', check, convert, show);
 
-app.get('/', (req, res) => res.sendFile(__dirname + '/index.html'))
+app.use(express.static('public'))
+app.get('*', (req, res) => res.sendFile(__dirname + '/index.html'))
 
 app.listen(port, () => console.log(`Example app listening on port 
-${port}!`))
+${ port}!`))
