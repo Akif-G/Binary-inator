@@ -44,9 +44,11 @@ const upload = multer({ storage: storage });
 sendToConvert = (req, res, next) => {
     const file = req.file;
     if (!file) {
-        const error = new Error('Please upload a file')
-        error.httpStatusCode = 400;
-        return next(error)
+        return res.status(400)
+            .json({
+                success: false,
+                data: 'Please specify a file',
+            })
     }
     var redirectAddress = '/convert?filename=' + req.file.filename;
     if (req.body.width) redirectAddress += '&width=' + req.body.width;
@@ -68,9 +70,11 @@ check = (req, res, next) => {
     };
     //check if there is file...
     if (!queries.filename) {
-        const error = new Error('Please specify a file')
-        error.httpStatusCode = 400
-        return next(error)
+        return res.status(400)
+            .json({
+                success: false,
+                data: 'Please specify a file',
+            })
     }
 
     //check if there are queries, import to defaults if not.
@@ -82,21 +86,27 @@ check = (req, res, next) => {
     //limitations
 
     if (queries.height > 255 || queries.width < 1) {
-        const error = new Error('height is invalid')
-        error.httpStatusCode = 400
-        return next(error)
+        return res.status(400)
+            .json({
+                success: false,
+                data: 'height is invalid (min:0 max:255)',
+            })
     };
 
     if (queries.width > 255 || queries.width < 1) {
-        const error = new Error('width is invalid')
-        error.httpStatusCode = 400
-        return next(error)
+        return res.status(400)
+            .json({
+                success: false,
+                data: 'width is invalid (min:0 max:255)',
+            })
     };
 
     if (queries.tolarance > 126) {
-        const error = new Error('tolarence is invalid')
-        error.httpStatusCode = 400
-        return next(error)
+        return res.status(400)
+            .json({
+                success: false,
+                data: 'tolarance is invalid (min:0 max:126)',
+            })
     };
 
     //ok

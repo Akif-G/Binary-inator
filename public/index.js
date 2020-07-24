@@ -14,9 +14,7 @@ if (document.body) {
         const data = $('#submitForm').serializeArray()
 
         for (i of data) {
-            console.log(i)
             bodyFormData.append(i.name, i.value)
-            console.log(bodyFormData)
         }
 
         var fileInput = document.getElementById('file-upload');
@@ -31,18 +29,15 @@ if (document.body) {
             data: bodyFormData
         }, config)
             .then((response) => {
-
                 $('.Draw').html(response.data)
-                console.log(response);
             }, (error) => {
-                console.log(error);
+                $('.Draw').html(error.response.data.data)
             });
     };
 
     function uploadFile() {
         var fileInput = document.getElementById('file-upload');
         var name = fileInput.files[0].name
-        console.log(name.length)
         if (name.length > 20) {
             name = name.substring(0, 18) + "...";
             $('.custom-file-upload').text(name)
@@ -52,7 +47,6 @@ if (document.body) {
         }
     };
 
-    console.log(document.getElementById("ConvertButton"))
     document.getElementById("ConvertButton").addEventListener('click', submitFile);
     document.getElementById("file-upload").addEventListener('input', uploadFile, false)
 
