@@ -13,13 +13,16 @@ def pixelToBinary(text):
     imgSmall = img.resize((40, 40), resample=Image.BILINEAR)
 
     # Save
-    imgSmall.save('result.png')
+    # imgSmall.save('result.png')
 
     open_cv_image = numpy.array(imgSmall)
     # Convert RGB to BGR
     originalImage = open_cv_image[:, :, ::-1].copy()
 
     grayImage = cv2.cvtColor(originalImage, cv2.COLOR_BGR2GRAY)
+
+    (thresh, blackAndWhiteImage) = cv2.threshold(
+        grayImage, 127, 255, cv2.THRESH_BINARY)
 
     # too dark or too brigth
     threshold = 127
