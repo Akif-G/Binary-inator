@@ -63,7 +63,7 @@ const convert = (req, res, next) => {
 }
 const show = (req, res, next) => {
     // var page = req.dataToSend.split('').map(el => { if (el !== " ") return '<p style="width:2.5%; margin:0px; height:auto; font-size:10px">' + el + '</p>' }).join('')
-
+    req.dataToSend;
     var page = "<div style='width:485px'>" + req.dataToSend + "</div>"
     res.send(page)
 }
