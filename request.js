@@ -79,6 +79,26 @@ check = (req, res, next) => {
     if (!queries.tolarance) queries.tolarance = 57;
     if (!queries.inpage) queries.inpage = false;
 
+    //limitations
+
+    if (queries.height > 255 || queries.width < 1) {
+        const error = new Error('height is invalid')
+        error.httpStatusCode = 400
+        return next(error)
+    };
+
+    if (queries.width > 255 || queries.width < 1) {
+        const error = new Error('width is invalid')
+        error.httpStatusCode = 400
+        return next(error)
+    };
+
+    if (queries.tolarance > 126) {
+        const error = new Error('tolarence is invalid')
+        error.httpStatusCode = 400
+        return next(error)
+    };
+
     //ok
     req.query = queries;
     next()
