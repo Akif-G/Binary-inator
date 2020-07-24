@@ -64,7 +64,7 @@ check = (req, res, next) => {
         width: req.query.width ? req.query.width : null,
         height: req.query.height ? req.query.height : null,
         tolarance: req.query.tolarance ? req.query.tolarance : null,
-        inpage: req.query.inpage ? req.query.inpage : null,
+        inpage: req.query.inpage === 'true' ? true : false,
     };
     //check if there is file...
     if (!queries.filename) {
@@ -114,9 +114,9 @@ const convert = (req, res, next) => {
     });
 }
 const show = (req, res, next) => {
-    console.log(req.query)
-    if (req.query.inpage) {
-        var page = "<div style='width:" + req.query.width * 12.05 + "px'>" + req.dataToSend + "</div>"
+    console.log(req.query.inpage)
+    if (req.query.inpage === true) {
+        var page = "<div style=\"width:" + req.query.width * 12.05 + "px; font:16px \'Times New Roman\'\">" + req.dataToSend + "</div>"
         res.send(page)
     }
     else {
@@ -126,7 +126,7 @@ const show = (req, res, next) => {
 }
 
 // API
-app.post('/uploadfile', (res, req, next) => { console.log(req.body); next() }, upload.single('myFile'), sendToConvert);
+app.post('/uploadfile', (res, req, next) => { console.log(req.body); next() }, upload.single('file'), sendToConvert);
 
 app.get('/convert', check, convert, show);
 

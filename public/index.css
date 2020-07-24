@@ -35,11 +35,13 @@ body{
     background-size: cover;
     height: 100%;
     padding: 0.1rem;
-    margin: 0;
-    color: #333333c7;
+    padding-bottom:1rem;
+    margin: 0.1rem;
+    color: #333333;
     border:2px solid #333333c7;
     border-radius: 1%;
     box-sizing: border-box;
+    box-shadow: 2px 2px 5px #33333382;
 }
 .submitForm{
     padding:0 1rem ;
@@ -49,6 +51,7 @@ body{
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    
 }
 .element{
     width: 100%;
@@ -92,8 +95,9 @@ width: 0px;
     transition: all .2s ease-in-out;
     cursor: pointer;
     background: #833ab4;  /* fallback for old browsers */
-    background: -webkit-linear-gradient(to right, #fcb045, #fd1d1d, #833ab4);  /* Chrome 10-25, Safari 5.1-6 */
-    background: linear-gradient(to right, #fcb045, #fd1d1d, #833ab4); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    background: -webkit-linear-gradient(to right, #fcb045, #fd1d1d);  /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to right, #fcb045, #fd1d1d); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    box-shadow: 2px 2px 5px #75232382;
     
 }
 #imageChoose label:hover,
@@ -146,20 +150,25 @@ width: 0px;
     outline: 0!important;
     border: 0;
     transition: all .2s ease-in-out;
-    cursor: pointer;}
+    cursor: pointer;
+    box-shadow: 2px 2px 5px #33333382;
+    z-index: 2;
+}
 
 .Result{
     margin-right:1rem ;
     min-width: 20rem;
-    width: 50%;
-    height: 100% ;
+    min-width: 50%;
     min-height: 80vh;
     display: flex;
     justify-content: center;
     align-items: center;
     border:2px solid #333333c7;
     border-radius: 1%;
-    box-sizing: border-box;}
+    box-sizing: border-box;
+    box-shadow: 2px 2px 5px #33333382;
+}
+
 
 @media only screen and (max-width: 920px) {
     .SubmitGroup{
@@ -174,9 +183,11 @@ width: 0px;
     }
 
     .Container{
+    margin-top: 1rem;
     flex-direction: column;
     justify-content: flex-start;
     }
+
     .Result{
         margin: 0;
     }   
