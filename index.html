@@ -9,8 +9,18 @@
 
 <body>
     <form action="/uploadfile" enctype="multipart/form-data" method="POST">
+
         <input type="file" name="myFile" />
-        <input type="submit" value="Upload a file" />
+        <div>
+            <p>output width:</p>
+            <input type="text" name="width"></input>
+            <p>output height</p>
+            <input type="text" name="height"></input>
+        </div>
+        <br>
+        <div>
+            <input type="submit" value="Upload a file" />
+        </div>
     </form>
 </body>
 

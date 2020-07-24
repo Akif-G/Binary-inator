@@ -5,18 +5,18 @@ import cv2
 import sys
 
 
-def pixelToBinary(text):
+def pixelToBinary(text, width, height):
     # Open Paddington
-    img = Image.open(text)
+    img = Image.open(text).convert('RGB')
 
     # Resize smoothly down to 40x40 pixels
-    imgSmall = img.resize((40, 40), resample=Image.BILINEAR)
+    imgSmall = img.resize((width, height), resample=Image.BILINEAR)
 
     # Save
     # imgSmall.save('result.png')
 
-    open_cv_image = numpy.array(imgSmall)
     # Convert RGB to BGR
+    open_cv_image = numpy.array(imgSmall)
     originalImage = open_cv_image[:, :, ::-1].copy()
 
     grayImage = cv2.cvtColor(originalImage, cv2.COLOR_BGR2GRAY)
@@ -43,4 +43,14 @@ def pixelToBinary(text):
             print(k)
 
 
-pixelToBinary(sys.argv[1])
+# run the code with initials
+
+width = 40
+height = 40
+
+if len(sys.argv) > 2:
+    width = sys.argv[2]
+if len(sys.argv) > 3:
+    height = sys.argv[3]
+
+pixelToBinary(sys.argv[1], width, height)

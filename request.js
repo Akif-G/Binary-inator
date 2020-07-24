@@ -62,8 +62,6 @@ const convert = (req, res, next) => {
     });
 }
 const show = (req, res, next) => {
-
-    console.log(req.dataToSend)
     var page = "<div style='width:485px'>" + req.dataToSend + "</div>"
     res.send(page)
 }
@@ -81,6 +79,7 @@ app.post('/uploadfile', upload.single('myFile'), (req, res, next) => {
 app.get('/convert/:filename', convert, show);
 
 app.get('/', (req, res) => res.sendFile(__dirname + '/index.html'))
+app.get('*', (req, res) => res.sendFile(__dirname + '/index.html'))
 
 app.listen(port, () => console.log(`Example app listening on port 
 ${port}!`))
