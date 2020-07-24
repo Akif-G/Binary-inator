@@ -137,17 +137,21 @@ const convert = (req, res, next) => {
         };
         dataToSend += stringified;
     });
+
     // in close event we are sure that stream from child process is closed
     python.on('close', (code) => {
         // console.log(`child process close all stdio with code ${code}`);
         // send data to browser
         req.dataToSend = dataToSend;
-
         fs.unlink(filename, function (err) {
             if (err) return console.log(err);
             // console.log('file deleted successfully');
         });
-        next()
+        if (req.dataToSend) next()
+        else res.status(400).json({
+            success: false,
+            data: "file format is invalid."
+        });
     });
 }
 const show = (req, res, next) => {
