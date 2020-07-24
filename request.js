@@ -47,7 +47,7 @@ const convert = (req, res, next) => {
     if (req.params.filename) {
         filename = 'imgs/' + req.params.filename;
     }
-    const python = spawn('python', ['pixelToBinary.py', filename]);
+    const python = spawn('python', ['pixelToBinary.py', filename, req.body.width, req.body.height]);
     // collect data from script
     python.stdout.on('data', function (data) {
         console.log('Pipe data from python script ...');
@@ -62,11 +62,12 @@ const convert = (req, res, next) => {
     });
 }
 const show = (req, res, next) => {
-    var page = "<div style='width:485px'>" + req.dataToSend + "</div>"
+    var page = "<div style='width:" + req.body.width * 12.1 + "px'>" + req.dataToSend + "</div>"
     res.send(page)
 }
 
 app.post('/uploadfile', upload.single('myFile'), (req, res, next) => {
+    console.log(req.body)
     const file = req.file;
     if (!file) {
         const error = new Error('Please upload a file')

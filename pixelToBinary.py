@@ -48,9 +48,13 @@ def pixelToBinary(text, width, height):
 width = 40
 height = 40
 
-if len(sys.argv) > 2:
-    width = sys.argv[2]
-if len(sys.argv) > 3:
-    height = sys.argv[3]
+try:
+    if len(sys.argv) > 2:
+        width = int(sys.argv[2])
+    if len(sys.argv) > 3:
+        height = int(sys.argv[3])
+except:
+    width = 40
+    height = 40
 
 pixelToBinary(sys.argv[1], width, height)
