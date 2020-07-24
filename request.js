@@ -1,3 +1,4 @@
+const fs = require('fs');
 const express = require('express')
 const { spawn } = require('child_process');
 const multer = require('multer');
@@ -5,7 +6,6 @@ const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const path = require('path');
 const rateLimit = require('express-rate-limit');
-
 
 const app = express()
 const port = process.env.PORT || 2000;
@@ -28,8 +28,6 @@ app.use('/', limiter);
 //body parser: reading data from body into req.body, with limit of 10kb
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
-
-
 
 const storage = multer.diskStorage({
     destination: 'imgs',
@@ -60,7 +58,7 @@ sendToConvert = (req, res, next) => {
 };
 
 check = (req, res, next) => {
-    console.log(req.query)
+    // console.log(req.query)
     const queries = {
         filename: req.query.filename ? req.query.filename : null,
         width: req.query.width ? req.query.width : null,
@@ -124,27 +122,35 @@ const convert = (req, res, next) => {
     const python = spawn('python', ['pixelToBinary.py', filename, req.query.width, req.query.height, req.query.tolarance]);
     // collect data from script
     python.stdout.on('data', function (data) {
-        console.log('Pipe data from python script ...');
+        // console.log('Pipe data from python script ...');
         let stringified;
         try {
             stringified = data.toString();
         }
         catch (err) {
             console.log(err)
+            res.send(400).json({
+                success: false,
+                data: "file format is invalid."
+            })
             stringified = "";
         };
         dataToSend += stringified;
     });
     // in close event we are sure that stream from child process is closed
     python.on('close', (code) => {
-        console.log(`child process close all stdio with code ${code}`);
+        // console.log(`child process close all stdio with code ${code}`);
         // send data to browser
         req.dataToSend = dataToSend;
+
+        fs.unlink(filename, function (err) {
+            if (err) return console.log(err);
+            // console.log('file deleted successfully');
+        });
         next()
     });
 }
 const show = (req, res, next) => {
-    console.log(req.query.inpage)
     if (req.query.inpage === true) {
         var page = "<div style=\"width:" + req.query.width * 12.05 + "px; font:16px \'Times New Roman\'\">" + req.dataToSend + "</div>"
         res.send(page)
@@ -156,7 +162,7 @@ const show = (req, res, next) => {
 }
 
 // API
-app.post('/uploadfile', (res, req, next) => { console.log(req.body); next() }, upload.single('file'), sendToConvert);
+app.post('/uploadfile', upload.single('file'), sendToConvert);
 
 app.get('/convert', check, convert, show);
 
