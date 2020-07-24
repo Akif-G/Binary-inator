@@ -4,6 +4,8 @@ const multer = require('multer');
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const path = require('path');
+const rateLimit = require('express-rate-limit');
+
 
 const app = express()
 const port = process.env.PORT || 2000;
@@ -11,6 +13,23 @@ const port = process.env.PORT || 2000;
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(morgan('dev'));
+
+
+//security &http
+
+//limit requests
+const limiter = rateLimit({
+    max: 100,
+    windowMs: 60 * 60 * 1000,
+    message: 'too many request for this ip please try again later.'
+})
+app.use('/', limiter);
+
+//body parser: reading data from body into req.body, with limit of 10kb
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+
+
 
 const storage = multer.diskStorage({
     destination: 'imgs',
@@ -25,7 +44,6 @@ const convert = (req, res, next) => {
     var dataToSend;
     // spawn new child process to call the python script
     var filename = 'imgs/paddington.png';
-    console.log(req.params)
     if (req.params.filename) {
         filename = 'imgs/' + req.params.filename;
     }
@@ -39,8 +57,15 @@ const convert = (req, res, next) => {
     python.on('close', (code) => {
         console.log(`child process close all stdio with code ${code}`);
         // send data to browser
-        res.send(dataToSend)
+        req.dataToSend = dataToSend;
+        next()
     });
+}
+const show = (req, res, next) => {
+    // var page = req.dataToSend.split('').map(el => { if (el !== " ") return '<p style="width:2.5%; margin:0px; height:auto; font-size:10px">' + el + '</p>' }).join('')
+
+    var page = "<div style='width:485px'>" + req.dataToSend + "</div>"
+    res.send(page)
 }
 
 app.post('/uploadfile', upload.single('myFile'), (req, res, next) => {
@@ -53,7 +78,7 @@ app.post('/uploadfile', upload.single('myFile'), (req, res, next) => {
     res.redirect('/convert/' + req.file.filename);
 })
 
-app.get('/convert/:filename', convert);
+app.get('/convert/:filename', convert, show);
 
 app.get('/', (req, res) => res.sendFile(__dirname + '/index.html'))
 
