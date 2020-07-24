@@ -32,7 +32,7 @@ def pixelToBinary(text, width, height, tolarance):
     # while b/w ratio is not good continue to improve it,
     #   Terminate if tolarance is reached.
     #   Terminate if maximum trial is applied but there isno change = image is not suitable or one gray color domamint: b/w ratio changes rapidly for one trial...
-    while (threshold > 127-tolarance and threshold < 127+tolarance) and (blackAndWhiteImage.sum() < (width*height*255*/4) or blackAndWhiteImage.sum() > width*height*255*3/4) and (max > 0):
+    while (threshold > 127-tolarance and threshold < 127+tolarance) and (blackAndWhiteImage.sum() < (width*height*255/4) or blackAndWhiteImage.sum() > width*height*255*3/4) and (max > 0):
         (thresh, blackAndWhiteImage) = cv2.threshold(
             grayImage, threshold, 255, cv2.THRESH_BINARY)
         if blackAndWhiteImage.sum() < 102000:
