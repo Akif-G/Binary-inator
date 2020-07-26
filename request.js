@@ -6,6 +6,7 @@ const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const path = require('path');
 const rateLimit = require('express-rate-limit');
+const { response } = require('express');
 
 const app = express()
 const port = process.env.PORT || 2000;
@@ -160,9 +161,11 @@ const show = (req, res, next) => {
         res.send(page)
     }
     else {
-        let data = req.dataToSend.split('\n').join('')
-        res.send(`{"data":"${data}"}`)
-    }
+        let data = req.dataToSend.split('\n').join('').replace(/\s/g, '');
+        res.status(200).json({
+            data,
+        });
+    };
 }
 
 // API

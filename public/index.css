@@ -11,14 +11,23 @@ body{
     overflow: auto;
 }
 
+.noselect {
+    -webkit-touch-callout: none; /* iOS Safari */
+      -webkit-user-select: none; /* Safari */
+       -khtml-user-select: none; /* Konqueror HTML */
+         -moz-user-select: none; /* Old versions of Firefox */
+          -ms-user-select: none; /* Internet Explorer/Edge */
+              user-select: none; /* Non-prefixed version, currently
+                                    supported by Chrome, Edge, Opera and Firefox */
+  }
+
 .Container{
     display: flex;
     flex-direction: row;
     align-items: center;
-    justify-content: space-evenly;
+    justify-content: flex-start;
     min-height: 70%;
     min-width: 100%;
-    overflow: auto;
 }
 .SubmitGroup{
     padding-left:0 ;
@@ -157,22 +166,32 @@ width: 0px;
     z-index: 2;
 }
 
-.Result{
+#Result{
     margin-right:1rem ;
     min-width: 20rem;
     min-height: 70vh;
     display: flex;
-    justify-content: center;
+    /* justify-content: center; */
     align-items: center;
     border:2px solid #333333c7;
-    border-radius: 1%;
     box-sizing: border-box;
     box-shadow: 2px 2px 5px #33333382;
-    overflow: auto;
+    flex-shrink: 0;
 }
 
-.Draw{
-    overflow: auto;
+#output{
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+
+}
+
+.outputElement{
+    display: flex;
+    justify-content: space-between;
+    text-align:justify;
+    flex-direction: row;
 }
 
 @media only screen and (max-width: 920px) {
@@ -185,7 +204,7 @@ span{
     font-size: 12px;
 }
     
-@media only screen and (max-width: 666px) {
+@media only screen and (max-width: 730px) {
     body{
         height: 160vh;
         align-items: flex-start;
@@ -197,7 +216,7 @@ span{
     justify-content: flex-start;
     }
 
-    .Result{
+    #Result{
         margin: 0;
     }   
 }

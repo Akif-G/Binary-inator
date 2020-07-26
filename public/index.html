@@ -13,7 +13,7 @@
 
 <body>
     <div class=Container>
-        <div class="SubmitGroup">
+        <div class="SubmitGroup noselect">
             <div class="Form">
                 <form class="submitForm" id="submitForm">
                     <div class="element" id="imageChoose">
@@ -25,19 +25,22 @@
                     <br />
                     <div class="element">
                         <div class="InnerElement">
-                            <p>output width <span>(&lt;160)</span>:</p>
-                            <input type="text" name="width" placeholder="40"></input>
+                            <p>output width:</p>
+                            <input class="autoReload" id="width" type="text" name="width" placeholder="40"
+                                value="40"></input>
                         </div>
                         <div class="InnerElement">
                             <p>output height:</p>
-                            <input type="text" name="height" placeholder="40"></input>
+                            <input class="autoReload" id="height" type="text" name="height" placeholder="40"
+                                value="40"></input>
                         </div>
                         <div class="InnerElement">
                             <p>b/w tolarance:</p>
-                            <input type="text" name="tolarance" placeholder="0-126"></input>
+                            <input class="autoReload" type="text" name="tolarance" placeholder="0-126"
+                                value="63"></input>
                         </div>
                         <div class="InnerElement">
-                            <input type="checkbox" name="inpage" checked>inpage</input>
+                            <input id="autoReloadButton" type="checkbox">auto reload</input>
                         </div>
                     </div>
                 </form>
@@ -48,8 +51,10 @@
                 </label>
             </div>
         </div>
-        <div class="Result">
-            <div class="Draw">Output</div>
+        <div id="Result">
+            <div class="Draw" id="output">
+                <div style="padding:8.2rem">Output</div>
+            </div>
         </div>
     </div>
 
