@@ -107,7 +107,6 @@ $(document).ready(function () {// body is exists
 
     function autoReloadButton() {
         if ($('#autoReloadButton').prop('checked')) {
-            console.log('s')
             var elements = $(".autoReload");
             elements.on('input', submitFile);
         }

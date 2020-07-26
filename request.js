@@ -15,7 +15,6 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(morgan('dev'));
 
-
 //security &http
 
 //limit requests
@@ -58,7 +57,7 @@ sendToConvert = (req, res, next) => {
     res.redirect(redirectAddress);
 };
 
-check = (req, res, next) => {
+const Check = (req, res, next) => {
     // console.log(req.query)
     const queries = {
         filename: req.query.filename ? req.query.filename : null,
@@ -113,13 +112,14 @@ check = (req, res, next) => {
     next()
 }
 
-const convert = (req, res, next) => {
+const Convert = (req, res, next) => {
     var dataToSend = "";
     // spawn new child process to call the python script
     var filename = 'imgs/paddington.png';
     if (req.query.filename) {
         filename = 'imgs/' + req.query.filename;
     }
+
     const python = spawn('python', ['pixelToBinary.py', filename, req.query.width, req.query.height, req.query.tolarance]);
     // collect data from script
     python.stdout.on('data', function (data) {
@@ -144,10 +144,6 @@ const convert = (req, res, next) => {
         // console.log(`child process close all stdio with code ${code}`);
         // send data to browser
         req.dataToSend = dataToSend;
-        fs.unlink(filename, function (err) {
-            if (err) return console.log(err);
-            // console.log('file deleted successfully');
-        });
         if (req.dataToSend) next()
         else res.status(400).json({
             success: false,
@@ -155,7 +151,8 @@ const convert = (req, res, next) => {
         });
     });
 }
-const show = (req, res, next) => {
+
+const Show = (req, res, next) => {
     if (req.query.inpage === true) {
         var page = "<div style=\"width:" + req.query.width * 12.05 + "px; font:16px \'Times New Roman\'\">" + req.dataToSend + "</div>"
         res.send(page)
@@ -166,12 +163,26 @@ const show = (req, res, next) => {
             data,
         });
     };
+    next();
 }
+
+const Delete = (req, res, next) => {
+    const filename = `imgs/${req.query.filename}`
+    try {
+        fs.unlink(filename, function (err) {
+            if (err) return console.log(err);
+            // console.log('file deleted successfully');
+        });
+    }
+    catch (err) {
+        if (err) return console.log(err);
+    }
+};
 
 // API
 app.post('/uploadfile', upload.single('file'), sendToConvert);
 
-app.get('/convert', check, convert, show);
+app.get('/convert', Check, Convert, Show, Delete);
 
 app.use(express.static('public'))
 app.get('*', (req, res) => res.sendFile(__dirname + '/index.html'))
