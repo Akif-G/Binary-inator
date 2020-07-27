@@ -32,7 +32,7 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 const storage = multer.diskStorage({
     destination: 'imgs',
     filename: function (req, file, cb) {
-        cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname))
+        cb(null, file.fieldname + '_' + Date.now() + path.extname(file.originalname))
     }
 });
 
@@ -58,7 +58,7 @@ sendToConvert = (req, res, next) => {
 };
 
 const Check = (req, res, next) => {
-    // console.log(req.query)
+
     const queries = {
         filename: req.query.filename ? req.query.filename : null,
         width: req.query.width ? req.query.width : null,
@@ -66,6 +66,7 @@ const Check = (req, res, next) => {
         tolarance: req.query.tolarance ? req.query.tolarance : null,
         inpage: req.query.inpage === 'true' ? true : false,
     };
+
     //check if there is file...
     if (!queries.filename) {
         return res.status(400)
@@ -84,26 +85,29 @@ const Check = (req, res, next) => {
     //limitations
 
     if (queries.height > 255 || queries.width < 1) {
+        Delete(req, res, next)
         return res.status(400)
             .json({
                 success: false,
-                data: 'height is invalid (min:0 max:255)',
+                data: 'height is invalid (min:1 max:255)',
             })
     };
 
     if (queries.width > 255 || queries.width < 1) {
+        Delete(req, res, next)
         return res.status(400)
             .json({
                 success: false,
-                data: 'width is invalid (min:0 max:255)',
+                data: 'width is invalid (min:1 max:255)',
             })
     };
 
-    if (queries.tolarance > 126) {
+    if (queries.tolarance > 255 || queries.tolarance < 1) {
+        Delete(req, res, next)
         return res.status(400)
             .json({
                 success: false,
-                data: 'tolarance is invalid (min:0 max:126)',
+                data: 'tolarance is invalid (min:1 max:255)',
             })
     };
 
@@ -113,14 +117,13 @@ const Check = (req, res, next) => {
 }
 
 const Convert = (req, res, next) => {
-    var dataToSend = "";
-    // spawn new child process to call the python script
-    var filename = 'imgs/paddington.png';
-    if (req.query.filename) {
-        filename = 'imgs/' + req.query.filename;
-    }
 
+    var dataToSend = "";
+    var filename = 'imgs/' + req.query.filename;
+
+    // spawn new child process to call the python script
     const python = spawn('python', ['pixelToBinary.py', filename, req.query.width, req.query.height, req.query.tolarance]);
+
     // collect data from script
     python.stdout.on('data', function (data) {
         // console.log('Pipe data from python script ...');
@@ -129,7 +132,7 @@ const Convert = (req, res, next) => {
             stringified = data.toString();
         }
         catch (err) {
-            console.log(err)
+            Delete(req, res, next)
             res.send(400).json({
                 success: false,
                 data: "file format is invalid."
@@ -144,11 +147,12 @@ const Convert = (req, res, next) => {
         // console.log(`child process close all stdio with code ${code}`);
         // send data to browser
         req.dataToSend = dataToSend;
-        if (req.dataToSend) next()
+        if (req.dataToSend) return next()
         else res.status(400).json({
             success: false,
             data: "file format is invalid."
         });
+        Delete(req, res, next())
     });
 }
 

@@ -21,25 +21,9 @@ def pixelToBinary(text, width, height, tolarance):
 
     grayImage = cv2.cvtColor(originalImage, cv2.COLOR_BGR2GRAY)
 
-    (thresh, blackAndWhiteImage) = cv2.threshold(
-        grayImage, 127, 255, cv2.THRESH_BINARY)
-
-    # prevent infinite loops,
-    max = tolarance*1.5
-
-    # too dark or too brigth
-    threshold = 127
-    # while b/w ratio is not good continue to improve it,
-    #   Terminate if tolarance is reached.
     #   Terminate if maximum trial is applied but there isno change = image is not suitable or one gray color domamint: b/w ratio changes rapidly for one trial...
-    while (threshold > 127-tolarance and threshold < 127+tolarance) and (blackAndWhiteImage.sum() < (width*height*255/4) or blackAndWhiteImage.sum() > width*height*255*3/4) and (max > 0):
-        (thresh, blackAndWhiteImage) = cv2.threshold(
-            grayImage, threshold, 255, cv2.THRESH_BINARY)
-        if blackAndWhiteImage.sum() < 102000:
-            threshold -= 1
-        elif blackAndWhiteImage.sum() > 306000:
-            threshold += 1
-        max -= 1
+    (thresh, blackAndWhiteImage) = cv2.threshold(
+        grayImage, tolarance, 255, cv2.THRESH_BINARY)
 
     # print the convertion result
     rows, cols = blackAndWhiteImage.shape
@@ -81,6 +65,6 @@ try:
 except:
     width = 40
     height = 40
-    tolarance = 57
+    tolarance = 127
 
 pixelToBinary(sys.argv[1], width, height, tolarance)

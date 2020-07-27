@@ -105,10 +105,10 @@ width: 0px;
     border: 0;
     transition: all .2s ease-in-out;
     cursor: pointer;
-    background: #833ab4;  /* fallback for old browsers */
+    background: #fcb045;  /* fallback for old browsers */
     background: -webkit-linear-gradient(to right, #fcb045, #fd1d1d);  /* Chrome 10-25, Safari 5.1-6 */
     background: linear-gradient(to right, #fcb045, #fd1d1d); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-    box-shadow: 2px 2px 5px #75232382;
+    box-shadow: 2px 2px 5px #dab279bd;
     
 }
 #imageChoose label:hover,
@@ -124,6 +124,9 @@ width: 0px;
     transition: 0.2s;
 }
 
+.loading{transition: 0.3s;
+    animation:pulse 0.7s 1;  
+}
 
 .InnerElement{
     margin:3rem;
@@ -221,3 +224,18 @@ span{
     }   
 }
     
+@keyframes pulse {
+    0% {
+        background-color: #333;
+    }
+    50% {
+        background-color: rgb(255, 255, 255);
+        color:black;
+        box-shadow: 2px 2px 5px #FFFFFF;
+    }
+    100%{
+        background-color: #333;
+        color:#fff;
+        box-shadow: 2px 2px 5px #33333382;
+    }
+  }

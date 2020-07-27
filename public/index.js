@@ -20,6 +20,12 @@ $(document).ready(function () {// body is exists
     function submitFile(e) {
         e.preventDefault();
 
+        //button effect
+        var button = $("#ConvertButton")
+        button.text('Loading...')
+        button.addClass('loading')
+        button.css({ 'cursor': 'wait' });
+
         const config = {
             headers: {
                 'content-type': 'multipart/form-data'
@@ -44,14 +50,25 @@ $(document).ready(function () {// body is exists
             data: bodyFormData
         }, config)
             .then((response) => {
+                console.log(response)
                 const { data } = response;
                 placeData(data.data);
+
+                button.removeClass('loading')
+                button.text('Convert!')
+                button.css({ 'cursor': 'default' });
             }, (error) => {
-                $('.Draw').html(`<div style="padding:8.2rem">${error.response.data.data}</div>`)
+                $('.Draw').html(`<div style="padding:8.2rem">${error.response.data.data}</div>`);
+                $('#Result').css("zoom", `${1}`);
+
+                button.removeClass('loading')
+                button.text('Convert!')
+                button.css({ 'cursor': 'pointer' });
+
             });
     };
 
-    function placeData(data) {
+    const placeData = (data) => {
         var output = $('#output');
         output.empty();
         var outputElement = "";
@@ -63,11 +80,12 @@ $(document).ready(function () {// body is exists
             }
             outputElement += `<div class="outputElement">${outputElementLetter}</div>`;
         }
+
         output.append(outputElement);
-        autoZoom();
+        autoZoom()
     }
 
-    function autoZoom() {
+    const autoZoom = () => {
 
         function toRem(length) {
             var rem = (count) => {
@@ -85,33 +103,32 @@ $(document).ready(function () {// body is exists
 
         var width = $("#Result").width();
         var height = $("#Result").height();
-        var vh70 = $(window).height() * 0.7
+        var vh90 = $(window).height() * 0.9
 
-        if (toRem(width) > 20) {//bigger than 20 rem
-            var zoomRatio = 20 / (toRem(width));
+        if (toRem(width) > 23) {//bigger than 20 rem
+            var zoomRatio = 18 / (toRem(width));
             $('#Result').css("zoom", `${zoomRatio}`);
-
             //check out for the height now
             height = $("#Result").height()
-            if (height > vh70) {//bigger than 70vh
-                zoomRatio = (vh70) / height;
-                $('#Result').css("zoom", `${zoomRatio}`);
-            }
-
-        }//check out for the heigth even no is found
-        if (height > vh70) {//bigger than 70vh
-            var zoomRatio = (vh70) / (height);
+        }
+        //check out for the heigth even no is found
+        if (height > vh90) {//bigger than 70vh
+            var zoomRatio = (vh90) / (height);
             $('#Result').css("zoom", `${zoomRatio}`);
         }
     }
 
-    function autoReloadButton() {
+    function autoReloadButton(e) {
         if ($('#autoReloadButton').prop('checked')) {
-            var elements = $(".autoReload");
-            elements.on('input', submitFile);
+            var elements = $(".autoReload")
+            elements.keyup((e) => {
+                if (e.keyCode === 13) {
+                    submitFile(e)
+                }
+            });
         }
         else {
-            $(".autoReload").off("input");
+            $(".autoReload").off("keyup");
         }
     }
 
