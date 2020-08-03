@@ -131,6 +131,8 @@ $(document).ready(function () {// body is exists
             $(".autoReload").off("keyup");
         }
     }
+    $("body").css('background-image', 'url(./img/' + Math.floor(Math.random() * 18) + '.jpg)');
+    $("body").css('background-size', 'cover');
 
     $("#ConvertButton").click(submitFile);
     $("#file-upload").change(uploadFile);

@@ -12,48 +12,55 @@
 </head>
 
 <body>
-    <div class=Container>
-        <div class="SubmitGroup noselect">
-            <div class="Form">
-                <form class="submitForm" id="submitForm">
-                    <div class="element" id="imageChoose">
-                        <label for="file-upload" class="custom-file-upload">
-                            Upload A File
-                        </label>
-                        <input id="file-upload" type="file" name="myFile" />
-                    </div>
-                    <br />
-                    <div class="element">
-                        <div class="InnerElement">
-                            <p>output width:</p>
-                            <input class="autoReload" id="width" type="text" name="width" placeholder="1-255"
-                                value="40"></input>
-                        </div>
-                        <div class="InnerElement">
-                            <p>output height:</p>
-                            <input class="autoReload" id="height" type="text" name="height" placeholder="1-255"
-                                value="40"></input>
-                        </div>
-                        <div class="InnerElement">
-                            <p>b/w tolarance:</p>
-                            <input class="autoReload" type="text" name="tolarance" placeholder="1-255"
-                                value="127"></input>
-                        </div>
-                        <div class="InnerElement">
-                            <input id="autoReloadButton" type="checkbox">reload with Enter</input>
-                        </div>
-                    </div>
-                </form>
-            </div>
-            <div class="element " id="Convert">
-                <label id="ConvertButton">
-                    Convert!
-                </label>
-            </div>
+    <div class="Working">
+        <div class="Text noselect">
+            EVERYTHING
+            <br>
+            BINARY
         </div>
-        <div id="Result">
-            <div class="Draw" id="output">
-                <div style="padding:8.2rem">Output</div>
+        <div class="Container">
+            <div class="SubmitGroup noselect">
+                <div class="Form">
+                    <form class="submitForm" id="submitForm">
+                        <div class="element" id="imageChoose">
+                            <label for="file-upload" class="custom-file-upload">
+                                Upload A File
+                            </label>
+                            <input id="file-upload" type="file" name="myFile" />
+                        </div>
+                        <br />
+                        <div class="element">
+                            <div class="InnerElement">
+                                <p>output width:</p>
+                                <input class="autoReload" id="width" type="text" name="width" placeholder="1-255"
+                                    value="40"></input>
+                            </div>
+                            <div class="InnerElement">
+                                <p>output height:</p>
+                                <input class="autoReload" id="height" type="text" name="height" placeholder="1-255"
+                                    value="40"></input>
+                            </div>
+                            <div class="InnerElement">
+                                <p>b/w tolarance:</p>
+                                <input class="autoReload" type="text" name="tolarance" placeholder="1-255"
+                                    value="127"></input>
+                            </div>
+                            <div class="InnerElement">
+                                <input id="autoReloadButton" type="checkbox">reload with Enter</input>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="element " id="Convert">
+                    <label id="ConvertButton">
+                        Convert!
+                    </label>
+                </div>
+            </div>
+            <div id="Result">
+                <div class="Draw" id="output">
+                    <div style="padding:8.2rem">Output</div>
+                </div>
             </div>
         </div>
     </div>
