@@ -48,6 +48,7 @@ body{
     justify-content: flex-start;
     min-height: 70%;
     min-width: 100%;
+    flex-wrap: wrap;
 }
 .Container{
     display: flex;
@@ -241,6 +242,7 @@ span{
         margin-top: 1rem;
         flex-direction: column;
         justify-content: flex-start;
+        /* align-items: flex-start; */
     }   
     .Text{
         margin:  2rem ;
@@ -264,6 +266,10 @@ span{
     #Result{
         margin: 0;
     }   
+    .Working{
+        /* align-items: center; */
+        flex-wrap: wrap;
+    }
 }
     
 @keyframes pulse {
