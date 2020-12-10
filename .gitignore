@@ -1,5 +1,5 @@
 node_modules/
-# public/img/
+public/img/
 config.env
 # *.woff
 # *.woff2
